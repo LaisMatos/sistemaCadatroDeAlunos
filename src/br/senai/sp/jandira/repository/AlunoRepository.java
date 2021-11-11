@@ -5,16 +5,16 @@ import br.senai.sp.jandira.model.Aluno;
 public class AlunoRepository {
 	
 	//AlunoRespository é o obj repositório ou a escola onde fica a turma
-	// ATRIBUTO == array (uma coleção de alunos)
-	//CONSTRUTOR 1 == inicializar turma. Construtor padrão. 
+	//ATRIBUTO == também array (uma coleção de alunos)
+	//CONSTRUTOR 1 == inicializar turma. Construtor padrão, default. 
 	//CONSTRUTOR 2 == quantidade de alunos na turma.Tem parâmetro diferente do 1
-	//MÉTODOS == inserir um aluno no repositório. Set e Get
-	
+	//MÉTODOS == inserir um aluno no repositório. 
+	//contrutor? o método tem o mesmo nome da classe, ñ retorna nada e é publico
 	
 	//ATRIBUTO 
 	private Aluno[] turma; 
 	
-	//CONSTRUTOR 1
+	//CONSTRUTOR 1 
 	public AlunoRepository() {
 		turma = new Aluno[32];
 	}
@@ -23,14 +23,14 @@ public class AlunoRepository {
 		turma = new Aluno[32];
 	}
 		
-	//MÉTODOS set e get
-	public void gravar(Aluno aluno, int posicao) {
+	//MÉTODOS (set e get)?
+	public void gravar(Aluno aluno, int posicao) { //grava aluno em uma posição
 		turma[posicao]=aluno;	
 	}
-	public Aluno listarAluno(int posicao){
+	public Aluno listarAluno(int posicao){ //retorna posição do aluno
 		return turma[posicao];
 	}
-	public Aluno[] listarTodos(){
+	public Aluno[] listarTodos(){ //retorna a lista dos objetos
 		return turma;
 		
 	}
