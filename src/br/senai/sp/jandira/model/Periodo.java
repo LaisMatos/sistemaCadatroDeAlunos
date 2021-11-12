@@ -7,7 +7,7 @@ public enum Periodo {
 	NOITE ("Noite");
 	
 	private Periodo (String descricao) {
-		
+		this.descricao=descricao;
 	}
 	
 	private String descricao;

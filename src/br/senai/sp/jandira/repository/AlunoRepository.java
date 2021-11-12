@@ -10,6 +10,8 @@ public class AlunoRepository {
 	//CONSTRUTOR 2 == quantidade de alunos na turma.Tem parâmetro diferente do 1
 	//MÉTODOS == inserir um aluno no repositório. 
 	//contrutor? o método tem o mesmo nome da classe, ñ retorna nada e é publico
+	//Método2 == retornar o tamanho da turma 
+	
 	
 	//ATRIBUTO 
 	private Aluno[] turma; 
@@ -33,6 +35,10 @@ public class AlunoRepository {
 	public Aluno[] listarTodos(){ //retorna a lista dos objetos
 		return turma;
 		
+	}
+	//Método 2
+	public int getTamanho() {
+		return turma.length;
 	}
 	
 	

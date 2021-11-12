@@ -4,11 +4,14 @@ package br.senai.sp.jandira.gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 
 import java.awt.event.ActionEvent;
@@ -23,14 +26,24 @@ import br.senai.sp.jandira.repository.AlunoRepository;
 
 public class Frame extends JFrame {
 
-	String dias [] = {"domingo", "segunda", "terça", "quarta","quinta","sexta"};
-	
 	private JPanel contentPane;
 	private JTextField textField_Matricula;
 	private JTextField textField_Nome;
 	private int posicao = 0;
 	
+	private Periodo obterPeriodo (int periodoSelecionado) {
+		
+		if (periodoSelecionado ==0) {
+			return Periodo.MANHA;
+		}else if (periodoSelecionado ==1) {
+			return Periodo.TARDE;
+		}else {
+			return Periodo.NOITE;
+		}
+	}
+	
 	public Frame() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 508, 378);
 		contentPane = new JPanel();
@@ -43,79 +56,105 @@ public class Frame extends JFrame {
 		contentPane.add(textField_Matricula);
 		textField_Matricula.setColumns(10);
 		
-		JLabel lblNewLabel_Matricula = new JLabel("Matricula:");
-		lblNewLabel_Matricula.setBounds(20, 91, 62, 14);
-		contentPane.add(lblNewLabel_Matricula);
+		JLabel lblMatricula = new JLabel("Matricula:");
+		lblMatricula.setBounds(20, 91, 62, 14);
+		contentPane.add(lblMatricula);
 		
-		JLabel lblNewLabel_Nome = new JLabel("Nome:");
-		lblNewLabel_Nome.setBounds(20, 128, 50, 14);
-		contentPane.add(lblNewLabel_Nome);
+		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setBounds(20, 128, 50, 14);
+		contentPane.add(lblNome);
 		
 		textField_Nome = new JTextField();
 		textField_Nome.setBounds(92, 119, 172, 20);
 		contentPane.add(textField_Nome);
 		textField_Nome.setColumns(10);
 		
-		JLabel lblNewLabel_Periodo = new JLabel("Periodo:");
-		lblNewLabel_Periodo.setBounds(20, 178, 50, 14);
-		contentPane.add(lblNewLabel_Periodo);
+		JLabel lblPeriodo = new JLabel("Periodo:");
+		lblPeriodo.setBounds(20, 178, 50, 14);
+		contentPane.add(lblPeriodo);
 		
-		JButton btnNewButton_SalvarAluno = new JButton("Salvar Aluno");
-		btnNewButton_SalvarAluno.setBounds(20, 222, 186, 23);
-		contentPane.add(btnNewButton_SalvarAluno);
-		
-		
-		AlunoRepository turma =new AlunoRepository();
-						
-				
-		btnNewButton_SalvarAluno.addActionListener(new ActionListener() {
+		//JButton 
+		JButton btnSalvarAluno = new JButton("Salvar Aluno");
+		btnSalvarAluno.setBounds(20, 222, 186, 23);
+		contentPane.add(btnSalvarAluno);
 			
-				public void actionPerformed(ActionEvent e) {
-				Aluno aluno = new Aluno ();
-				aluno.setMatricula(textField_Matricula.getText());
-				aluno.setNome(textField_Nome.getName());
 				
-				turma.gravar(aluno, posicao);
-				posicao++;
-			}
-		});
+		JScrollPane scrollPaneAluno = new JScrollPane();
+		scrollPaneAluno.setBounds(276, 72, 186, 208);
+		contentPane.add(scrollPaneAluno);
 		
-		
-		
-		JScrollPane scrollPane_ListaAluno = new JScrollPane();
-		scrollPane_ListaAluno.setBounds(276, 72, 186, 208);
-		contentPane.add(scrollPane_ListaAluno);
-		
-		JList list_ListaAluno = new JList();
+		// JList		
+		JList listaAluno = new JList();
 		DefaultListModel<String> listaModel = new DefaultListModel<String>();
-		scrollPane_ListaAluno.setViewportView(list_ListaAluno);
+		listaAluno.setModel(listaModel);
+		scrollPaneAluno.setViewportView(listaAluno);
+				
 		
+		JLabel lblCadastroAluno = new JLabel("Cadastro de Aluno");
+		lblCadastroAluno.setBounds(175, 11, 134, 36);
+		contentPane.add(lblCadastroAluno);
 		
-		JLabel lblNewLabel_CadastroAluno = new JLabel("Cadastro de Aluno");
-		lblNewLabel_CadastroAluno.setBounds(175, 11, 134, 36);
-		contentPane.add(lblNewLabel_CadastroAluno);
-		
-		
-		JComboBox comboBox_Periodo = new JComboBox();
-		DefaultComboBoxModel<String> modelPeriodo = new DefaultComboBoxModel<String>(dias); 
+		//JComboBox
+		JComboBox comboPeriodo = new JComboBox();
+		DefaultComboBoxModel<String> modelPeriodo = new DefaultComboBoxModel<String>(); 
+		comboPeriodo.setModel(modelPeriodo);
 		
 		for(Periodo p : Periodo.values()) {
 			modelPeriodo.addElement(p.getDescricao());
 		}
+				
 		
-		comboBox_Periodo.setModel(modelPeriodo);
-		comboBox_Periodo.setBounds(94, 172, 112, 26);
-		contentPane.add(comboBox_Periodo);
+		comboPeriodo.setBounds(94, 172, 112, 26);
+		contentPane.add(comboPeriodo);
 		
 		
-		JLabel lblNewLabel_ListaAluno = new JLabel("Lista Aluno:");
-		lblNewLabel_ListaAluno.setBounds(276, 59, 112, 14);
-		contentPane.add(lblNewLabel_ListaAluno);
+		JLabel lblListaAluno = new JLabel("Lista Aluno:");
+		lblListaAluno.setBounds(276, 59, 112, 14);
+		contentPane.add(lblListaAluno);
 		
-		contentPane.setVisible(true);
 		
+		AlunoRepository turma = new AlunoRepository(3);
+		
+		btnSalvarAluno.addActionListener(new ActionListener() {
+			
+				public void actionPerformed(ActionEvent e) {
+					
+				Aluno aluno = new Aluno ();
+				aluno.setMatricula(textField_Matricula.getText());
+				aluno.setNome(textField_Nome.getText());
+				
+				//Definir o horário que o aluno estuda
+				aluno.setPeriodo(obterPeriodo(comboPeriodo.getSelectedIndex()));
+				
+				//grava aluno e posição na turma
+				turma.gravar(aluno, posicao);
+				
+				//adicionar o nome do aluno ao model da lista
+				listaModel.addElement(aluno.getNome());
+				
+				posicao++;
+				
+				if (posicao==turma.getTamanho()) {
+					btnSalvarAluno.setEnabled(false);
+					JOptionPane.showConfirmDialog(null,"A turma encheu!");
+				}
+				contentPane.setVisible(true);
+			}
+		});
+		
+			//achar o erro 
+			listaAluno.addListSelectionListener(new ListSelectionListener()){
+			
+		
+			public void valueChanged(ListSelectionEvent e) {
+				
+				Aluno aluno= turma.listarAluno(listaAluno.getSelectedIndex());
+				textField_Matricula.setText(aluno.getMatricula());
+				textField_Nome.setText(aluno.getNome());
+				
+				comboPeriodo.setSelectedIndex(aluno.getPeriodo().ordinal());
+			}
+		}
 	
-		
-		
 	}
 }
